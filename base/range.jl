@@ -865,9 +865,12 @@ function in(x, r::Range)
     n >= 1 && n <= length(r) && r[n] == x
 end
 
+_isinteger(x::Number) = isinteger(x)
+_isinteger(x::Any) = false
+
 in(x::Integer, r::AbstractUnitRange{<:Integer}) = (first(r) <= x) & (x <= last(r))
 in(x, r::Range{T}) where {T<:Integer} =
-    isinteger(x) && !isempty(r) && x >= minimum(r) && x <= maximum(r) &&
+    _isinteger(x) && !isempty(r) && x >= minimum(r) && x <= maximum(r) &&
         (mod(convert(T,x),step(r))-mod(first(r),step(r)) == 0)
 in(x::Char, r::Range{Char}) =
     !isempty(r) && x >= minimum(r) && x <= maximum(r) &&
